@@ -1,0 +1,2 @@
+kubectl delete svc b-currencyservice
+kubectl create -f manifest-svc.yaml
