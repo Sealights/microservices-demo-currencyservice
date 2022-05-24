@@ -45,9 +45,6 @@ RUN npm install slnodejs
 RUN BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs config --tokenfile sltoken.txt --appname "otel_currencyservice" --branch "master" --build "${BUILD_NAME}"
 RUN ./node_modules/.bin/slnodejs build --tokenfile sltoken.txt --buildsessionidfile buildSessionId --workspacepath "." --scm none --es6Modules
 
-RUN npm i sl-otel slnodejs-otel --registry http://nex.sealights.co:8081/repository/sealights-npm-group
-
-
 EXPOSE 7000
 
 ENTRYPOINT [ "./node_modules/.bin/slnodejs", "run", "--tokenfile", "sltoken.txt", "--buildsessionidfile", "buildSessionId", "--labid", "integ_test_otel", "--", "--require", "./tracing.js", "server.js" ]
