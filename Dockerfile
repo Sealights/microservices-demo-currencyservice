@@ -41,6 +41,12 @@ COPY --from=builder /usr/src/app/node_modules ./node_modules
 
 COPY . .
 
+RUN npm install slnodejs
+RUN BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs config --tokenfile sltoken.txt --appname "otel_currencyservice" --branch "master" --build "${BUILD_NAME}"
+RUN ./node_modules/.bin/slnodejs build --tokenfile sltoken.txt --buildsessionidfile buildSessionId --workspacepath "." --scm none --es6Modules
+
+
 EXPOSE 7000
 
-ENTRYPOINT [ "node", "--require", "./tracing.js", "server.js" ]
+ENTRYPOINT [ "./node_modules/.bin/slnodejs", "run", "--tokenfile", "sltoken.txt", "--buildsessionidfile", "buildSessionId", "--labid", "integ_test_otel", "--", "--require", "server.js" ]
+
