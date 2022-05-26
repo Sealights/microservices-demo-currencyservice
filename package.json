@@ -4,7 +4,7 @@
   "description": "A gRPC currency conversion microservice",
   "repository": "https://github.com/GoogleCloudPlatform/microservices-demo",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "lint": "semistandard *.js"
   },
   "license": "Apache-2.0",
@@ -15,7 +15,9 @@
     "@opentelemetry/exporter-trace-otlp-grpc": "^0.27.0",
     "@opentelemetry/sdk-node": "^0.27.0",
     "async": "^3.2.3",
+    "chai": "^4.3.6",
     "google-protobuf": "^3.19.4",
+    "mocha": "^10.0.0",
     "pino": "^7.8.0",
     "xml2js": "^0.4.23"
   },
