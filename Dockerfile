@@ -47,4 +47,4 @@ RUN ./node_modules/.bin/slnodejs build --tokenfile sltoken.txt --buildsessionidf
 
 EXPOSE 7000
 
-ENTRYPOINT ./node_modules/.bin/slnodejs run --tokenfile sltoken.txt --buildsessionidfile buildSessionId --labid integ_test_otel && ./node_modules/.bin/slnodejs start --tokenfile sltoken.txt --labid integ_test_otel --teststage Unit Tests --buildsessionidfile buildSessionId -- --require ./tracing.js server.js
+ENTRYPOINT [ "./node_modules/.bin/slnodejs", "run", "--tokenfile", "sltoken.txt", "--buildsessionidfile", "buildSessionId", "--labid", "integ_test_otel", "--", "--require", "./tracing.js", "server.js" ]
