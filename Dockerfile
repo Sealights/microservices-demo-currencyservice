@@ -48,4 +48,4 @@ RUN ./node_modules/.bin/slnodejs start --tokenfile sltoken.txt --labid lab_curre
 RUN npm test
 RUN ./node_modules/.bin/slnodejs end --tokenfile sltoken.txt --labid lab_currencyservice
 
-ENTRYPOINT [ "./node_modules/.bin/slnodejs", "run", "--tokenfile", "sltoken.txt", "--labid", "lab_currencyservice", "--", "--require", "./tracing.js", "server.js"]
+ENTRYPOINT [ "./node_modules/.bin/slnodejs", "run", "--tokenfile", "sltoken.txt", "--buildsessionidfile", "buildSessionId", "--labid", "lab_currencyservice", "--", "--require", "./tracing.js", "server.js"]
