@@ -88,6 +88,7 @@ function convert (call, callback) {
   try {
     _getCurrencyData((data) => {
       const request = call.request;
+      
 
       // Convert: from_currency --> EUR
       const from = request.from;
