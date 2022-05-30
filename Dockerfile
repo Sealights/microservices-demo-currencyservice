@@ -42,10 +42,10 @@ COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY . .
 
 RUN npm install slnodejs
-RUN BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs config --tokenfile sltoken.txt --appname "otel_currencyservice" --branch "master" --build "${BUILD_NAME}"
-RUN ./node_modules/.bin/slnodejs build --tokenfile sltoken.txt --buildsessionidfile buildSessionId --workspacepath "." --scm none --es6Modules
-RUN ./node_modules/.bin/slnodejs start --tokenfile sltoken.txt --labid integ_test_otel --teststage "Unit Tests" --buildsessionidfile buildSessionId
+RUN BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs config --tokenfile sltoken.txt --appname "otel_currencyservice_3" --branch "master" --build "${BUILD_NAME}"
+RUN ./node_modules/.bin/slnodejs build --tokenfile sltoken.txt --labid lab_currencyservice --buildsessionidfile buildSessionId --workspacepath "." --scm none --es6Modules
+RUN ./node_modules/.bin/slnodejs start --tokenfile sltoken.txt --labid lab_currencyservice --buildsessionidfile buildSessionId --teststage "Unit Tests"
+RUN npm test
+RUN ./node_modules/.bin/slnodejs end --tokenfile sltoken.txt --labid lab_currencyservice
 
-EXPOSE 7000
-
-ENTRYPOINT [ "./node_modules/.bin/slnodejs", "run", "--tokenfile", "sltoken.txt", "--buildsessionidfile", "buildSessionId", "--labid", "integ_test_otel", "--", "--require", "./tracing.js", "server.js" ]
+ENTRYPOINT [ "./node_modules/.bin/slnodejs", "run", "--tokenfile", "sltoken.txt", "--labid", "lab_currencyservice", "--", "--require", "./tracing.js", "server.js"]
