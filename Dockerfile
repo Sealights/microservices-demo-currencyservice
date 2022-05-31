@@ -44,8 +44,5 @@ COPY . .
 RUN npm install slnodejs
 RUN BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs config --tokenfile sltoken.txt --appname "otel_currencyservice_3" --branch "master" --build "${BUILD_NAME}"
 RUN ./node_modules/.bin/slnodejs build --tokenfile sltoken.txt --labid lab_currencyservice --buildsessionidfile buildSessionId --workspacepath "." --scm none --es6Modules
-RUN ./node_modules/.bin/slnodejs start --tokenfile sltoken.txt --labid lab_currencyservice --buildsessionidfile buildSessionId --teststage "Unit Tests"
-RUN npm test
-RUN ./node_modules/.bin/slnodejs end --tokenfile sltoken.txt --labid lab_currencyservice
 
 ENTRYPOINT [ "./node_modules/.bin/slnodejs", "run", "--tokenfile", "sltoken.txt", "--buildsessionidfile", "buildSessionId", "--labid", "lab_currencyservice", "--", "--require", "./tracing.js", "server.js"]
