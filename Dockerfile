@@ -14,6 +14,9 @@
 
 FROM node:16-alpine as base
 
+ARG RM_DEV_SL_TOKEN=local
+ENV RM_DEV_SL_TOKEN ${RM_DEV_SL_TOKEN}
+
 FROM base as builder
 
 # Some packages (e.g. @google-cloud/profiler) require additional
@@ -42,9 +45,11 @@ COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY . .
 
 RUN npm install slnodejs
-RUN BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs config --tokenfile sltoken.txt --appname "otel_currencyservice_3" --branch "master" --build "${BUILD_NAME}"
-RUN ./node_modules/.bin/slnodejs build --tokenfile sltoken.txt --labid lab_currencyservice --buildsessionidfile buildSessionId --workspacepath "." --scm none --es6Modules
+RUN BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --branch "master" --build "${BUILD_NAME}"
+RUN ./node_modules/.bin/slnodejs build --token $RM_DEV_SL_TOKEN --buildsessionidfile buildSessionId --workspacepath "." --scm none --es6Modules
+
+RUN ./node_modules/.bin/slnodejs mocha --token $RM_DEV_SL_TOKEN --buildsessionidfile buildSessionId --teststage "Unit Tests" --useslnode2 -- --recursive test
 
 EXPOSE 7000
 
-ENTRYPOINT [ "./node_modules/.bin/slnodejs", "run", "--tokenfile", "sltoken.txt", "--buildsessionidfile", "buildSessionId", "--labid", "lab_currencyservice", "--", "--require", "./tracing.js", "server.js" , ""]
+ENTRYPOINT ./node_modules/.bin/slnodejs run --token $RM_DEV_SL_TOKEN --buildsessionidfile buildSessionId -- --require ./tracing.js server.js
