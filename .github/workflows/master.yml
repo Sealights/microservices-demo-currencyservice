@@ -1,15 +1,25 @@
 ﻿
-name: Push to master
+name: Build, push image, trigger tests
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-
+          
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+  
+env:
+  GH_TOKEN: ${{ secrets.GH_PAT }}
+  GH_USER_NAME: ${{ secrets.GH_USER_NAME }}
+  GH_USER_EMAIL: ${{ secrets.GH_USER_EMAIL }}
+  INITIATOR: "currency"
+  ECR_REPOSITORY: microservices-demo-currencyservice
+  #IMAGE: "474620256508.dkr.ecr.us-east-2.amazonaws.com/microservices-demo-currencyservice"
+  GH_DEPLOYMENT_REPO: "Sealights/microservices-demo-deployment.git"
+  
 jobs:
-  build-and-test:
+  build-test-push:
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -23,20 +33,95 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-1
+          aws-access-key-id: ${{ secrets.AWS_US_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_US_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+
+      - name: Install yq
+        run: |
+          wget https://github.com/mikefarah/yq/releases/download/v4.25.2/yq_linux_386 -O /usr/bin/yq && chmod +x /usr/bin/yq
 
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build, tag, and push image to Amazon ECR
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GH_PAT }}
+          
+      - name: Build container and test
+        id: build_container
         if: github.event_name != 'pull_request'
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: microservices-demo-currencyservice
-          IMAGE_TAG: latest
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}          
+          IMAGE_TAG: ${{ steps.tag_version.outputs.new_tag }}
         run: |
-          docker build --build-arg RM_DEV_SL_TOKEN=${{ secrets.RM_DEV_SL_TOKEN }} -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .          
+          docker build --build-arg RM_DEV_SL_TOKEN=${{ secrets.RM_DEV_SL_TOKEN }} -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .       
+          #echo '::set-output name=IMAGE_URI::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG'
+          
+      - name: Push image to Amazon ECR
+        if: github.event_name != 'pull_request'
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}          
+          IMAGE_TAG: ${{ steps.tag_version.outputs.new_tag }}        
+        run: |
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Integration build - fetch deployment repo
+        id: branch_creation
+        run: |             
+             git config --global user.name ${GH_USER_NAME}
+             git config --global user.email ${GH_USER_EMAIL}
+            
+             export GITHUB_TOKEN=${GH_TOKEN}
+                                       
+             git clone https://${GH_TOKEN}@github.com/Sealights/microservices-demo-deployment.git integration
+             git remote set-url origin https://${GH_TOKEN}@github.com/Sealights/microservices-demo-deployment.git
+             cd integration
+             cd k3s/$INITIATOR
+             
+      - name: Integration build - modify manifest 
+        env:
+             ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}     
+        run: |
+             export VERSION=${{ steps.tag_version.outputs.new_tag }}
+             #export IMAGE=${IMAGE}:$VERSION
+             export IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$VERSION
+             echo $IMAGE
+             
+             #sudo snap install yq
+
+             cd integration
+             cd k3s/$INITIATOR
+             
+             yq -i '(.spec.template.spec.containers[0].env.[]|select(.name=="VERSION").value)|=strenv(VERSION)' manifest-pod.yaml
+             yq -i '(.spec.template.spec.containers[0].image)=strenv(IMAGE)' manifest-pod.yaml
+             
+      - name: Integration build - create deployment branch 
+        run: | 
+             cd integration
+             cd k3s/$INITIATOR
+             
+             #export NOW=`date -u +"%Y-%m-%d %H:%M:%S,%3N"`
+             #echo "Last touched at: $NOW" >> touch.txt
+             
+             export BRANCH_NAME=master@deployment_$RANDOM
+             echo '::set-output name=BRANCH_NAME::$BRANCH_NAME'
+             
+             git checkout -b $BRANCH_NAME
+             git add .
+             git commit -a -m "Deployment amended by $INITIATOR"
+             git push --set-upstream origin $BRANCH_NAME      
+             
+      - name: Integration build - create Pull Request      
+        run: |      
+             cd integration
+             cd k3s/$INITIATOR        
+             #git request-pull ${{ steps.branch_creation.outputs.branch_name }}" https://${GH_TOKEN}@github.com/GH_DEPLOYMENT_REPO master
+             echo ${GH_TOKEN} >> token.txt
+             export GITHUB_TOKEN=
+             export GH_TOKEN=
+             gh auth login --with-token < token.txt
+             gh pr create -B master --title="$INITIATOR service - ${{ steps.tag_version.outputs.new_tag }}" --body="Auto-created PR after $INITIATOR service (${{ steps.tag_version.outputs.new_tag }}) source changed"          
