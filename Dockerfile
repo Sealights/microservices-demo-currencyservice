@@ -44,17 +44,10 @@ COPY --from=builder /usr/src/app/node_modules ./node_modules
 
 COPY . .
 
-RUN npm install http://sl-repo-dev.s3.amazonaws.com/sl-otel-0.2.9.tgz
-RUN npm install http://sl-repo-dev.s3.amazonaws.com/slnodejs-otel-1.0.4.tgz
+RUN npm install https://sl-repo-dev.s3.amazonaws.com/sl-otel-agent-0.3.1.tgz
+RUN npm install https://sl-repo-dev.s3.amazonaws.com/slnodejs-1.0.5.tgz
 
-ENV SL_useOtelAgent=true
-ENV OTEL_AGENT_TEST_STAGE="Unit Tests"
-ENV OTEL_AGENT_COLLECTOR_PATH=grpc://ingest.risk-management.dev.sealights.co:443
-
-ENV OTEL_AGENT_ENVIRONMENT_TYPE=production 
-ENV OTEL_AGENT_SERVICE_NAME=currencyservice
-ENV OTEL_AGENT_AUTH_TOKEN=$RM_DEV_SL_TOKEN 
-ENV OTEL_AGENT_SECURE_CONNECTION=1
+ENV SL_useOtelAgentInReporter=1
 
 RUN BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --branch "master" --build "${BUILD_NAME}"
 
@@ -64,4 +57,4 @@ RUN ./node_modules/.bin/slnodejs mocha --token $RM_DEV_SL_TOKEN --buildsessionid
 
 EXPOSE 7000
 
-ENTRYPOINT ./node_modules/.bin/slnodejs run --token $RM_DEV_SL_TOKEN --buildsessionidfile buildSessionId -- --require ./tracing.js server.js
+ENTRYPOINT ./node_modules/.bin/slnodejs run --token $RM_DEV_SL_TOKEN --buildsessionidfile buildSessionId --labid integ_master_813e_SLBoutique -- --require ./tracing.js server.js
