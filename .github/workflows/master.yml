@@ -22,6 +22,24 @@ jobs:
   build-test-push:
     runs-on: ubuntu-latest
     steps:
+      - name: debug
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}          
+          IMAGE_TAG: ${{ steps.tag_version.outputs.new_tag }}
+          TARGET_BRANCH: ${{ github.base_ref }}
+          LATEST_COMMIT: ${{ github.github_sha }}
+          PR_NUMBER: ${{ github.github_ref }}
+          REPO_URL: ${{ github.github_server_url }} ${{ github.github_repository }}
+        run: |
+          echo "TARGET BRANCH: $TARGET_BRANCH"
+          echo "LATEST COMMIT: $LATEST_COMMIT"
+          echo "PR NUMBER: $PR_NUMBER"
+          echo "TARGET REPO URL: $REPO_URL"
+          echo "head ref: ${{ github.head_ref }}
+          echo "base ref: ${{ github.base_ref }}      
+          echo "head ref: ${{ github.head_ref }}
+          echo "base ref: ${{ github.base_ref }}
+    
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
@@ -53,12 +71,23 @@ jobs:
           
       - name: Build container and test
         id: build_container
-        if: github.event_name != 'pull_request'
+        #if: github.event_name != 'pull_request'
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}          
           IMAGE_TAG: ${{ steps.tag_version.outputs.new_tag }}
+          TARGET_BRANCH: ${{ github.base_ref }}
+          LATEST_COMMIT: ${{ github.github_sha }}
+          PR_NUMBER: ${{ github.github_ref }}
+          REPO_URL: ${{ github.github_server_url }} ${{ github.github_repository }}
         run: |
-          docker build --build-arg RM_DEV_SL_TOKEN=${{ secrets.RM_DEV_SL_TOKEN }} -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .       
+          echo "TARGET BRANCH: $TARGET_BRANCH"
+          echo "LATEST COMMIT: $LATEST_COMMIT"
+          echo "PR NUMBER: $PR_NUMBER"
+          echo "TARGET REPO URL: $REPO_URL"
+          echo "head ref: ${{ github.head_ref }}
+          echo "base ref: ${{ github.base_ref }}
+          docker build --build-arg RM_DEV_SL_TOKEN=${{ secrets.RM_DEV_SL_TOKEN }} --build-arg IS_PR=1 --build-arg TARGET_BRANCH="$TARGET_BRANCH" \
+            --build-arg LATEST_COMMIT="$LATEST_COMMIT" --build-arg PR_NUMBER="$PR_NUMBER" --build-arg TARGET_REPO_URL="$REPO_URL" -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .       
           #echo '::set-output name=IMAGE_URI::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG'
           
       - name: Push image to Amazon ECR
