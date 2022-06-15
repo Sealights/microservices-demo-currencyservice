@@ -33,10 +33,13 @@ jobs:
           echo "LATEST COMMIT: ${{ github.github_sha }}"
           echo "PR NUMBER: ${{ github.github_ref }}"
           echo "TARGET REPO URL: ${{ github.github_server_url }} ${{ github.github_repository }}"
+          
           echo "head ref: ${{ github.head_ref }}
           echo "base ref: ${{ github.base_ref }}      
-          echo "ABC: ${GITHUB_SHA}"
-          echo "ABC: ${GITHUB_SHA:0:7}"
+          echo "GITHUB_SHA: ${GITHUB_SHA}"
+          echo "SERVER: ${GITHUB_SERVER_URL}"
+          echo "SERVER: ${GITHUB_REPOSITORY}"
+
     
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -74,12 +77,12 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}          
           IMAGE_TAG: ${{ steps.tag_version.outputs.new_tag }}
           TARGET_BRANCH: ${{ github.base_ref }}
-          LATEST_COMMIT: ${{ GITHUB_SHA }}
+          LATEST_COMMIT: ${{ github.github_sha }}
           PR_NUMBER: ${{ GITHUB_REF }}
           REPO_URL: ${{ GITHUB_SERVER_URL }} ${{ GITHUB_REPOSITORY }}
         run: |        
           echo "TARGET BRANCH: $TARGET_BRANCH"
-          echo "LATEST COMMIT: $LATEST_COMMIT"
+          echo "LATEST COMMIT: ${ GITHUB_SHA }}"
           echo "PR NUMBER: $PR_NUMBER"
           echo "TARGET REPO URL: $REPO_URL"
           echo "head ref: ${{ github.head_ref }}
