@@ -20,16 +20,7 @@ env:
 jobs:
   build-test-push:
     runs-on: ubuntu-latest
-    steps:
-      - name: debug
-        env:
-          #TARGET_BRANCH: ${{ github.base_ref }}
-          #LATEST_COMMIT: ${{ github.github_sha }}         
-          #REPO_URL: ${{ github.github_server_url }} ${{ github.github_repository }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: |           
-           echo "$IS_PR"
-          
+    steps:         
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
@@ -68,7 +59,7 @@ jobs:
           IMAGE_TAG: ${{ steps.tag_version.outputs.new_tag }}
           TARGET_BRANCH: "${{ github.event.pull_request.base.ref }}"          
         run: |                           
-          export REPO_URL="${GITHUB_SERVER_URL}\${GITHUB_REPOSITORY}"
+          export REPO_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
           export LATEST_COMMIT="${GITHUB_SHA}"
           export TARGET_BRANCH="$TARGET_BRANCH"
           export PR_NUMBER="${{ github.event.number }}"
