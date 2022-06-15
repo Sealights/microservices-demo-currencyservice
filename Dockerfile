@@ -65,7 +65,7 @@ RUN if [[ $IS_PR -eq 1 ]]; then \
     echo "Pull request"; \
     BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs Config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --branch "master" --build "${BUILD_NAME}"; \
 else \ 
-    echo "Checkin to repo"
+    echo "Checkin to repo"; \
     BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs Config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --targetBranch "${TARGET_BRANCH}" \
     --latestCommit "${LATEST_COMMIT}" --pullRequestNumber "${PR_NUMBER}" --repositoryUrl "${TARGET_REPO_URL}"; \
 fi
