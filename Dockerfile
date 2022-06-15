@@ -75,7 +75,7 @@ ENV OTEL_AGENT_SERVICE_NAME=currencyservice
 ENV OTEL_AGENT_AUTH_TOKEN=$RM_DEV_SL_TOKEN 
 ENV OTEL_AGENT_SECURE_CONNECTION=1
 
-
+RUN BUILD_NAME=$(date +%F_%T)
 
 #RUN if [[ $IS_PR -eq 0 ]]; then \
 #    echo "Check-in to repo"; \
@@ -86,7 +86,8 @@ ENV OTEL_AGENT_SECURE_CONNECTION=1
 #    --latestCommit "${LATEST_COMMIT}" --pullRequestNumber "${PR_NUMBER}" --repositoryUrl "${TARGET_REPO_URL}"; \
 #fi
 
-RUN BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs Config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --branch "master" --build "${BUILD_NAME}"
+echo "BUILD NAME: ${BUILD_NAME}"
+RUN ./node_modules/.bin/slnodejs Config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --branch "master" --build "${BUILD_NAME}"
 
 #if
 #RUN if (IS_PR) BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs Config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --branch "master" --build "${BUILD_NAME}"
