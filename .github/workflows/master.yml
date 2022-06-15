@@ -66,6 +66,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}          
           IMAGE_TAG: ${{ steps.tag_version.outputs.new_tag }}
           PR_NUMBER: "${{ github.event.number }}"
+          TARGET_BRANCH: "${{ github.base_ref }}"
         run: |                           
           export REPO_URL="SERVER\REPO: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
           export LATEST_COMMIT="${GITHUB_SHA}"
