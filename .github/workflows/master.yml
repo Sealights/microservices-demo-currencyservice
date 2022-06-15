@@ -53,12 +53,21 @@ jobs:
           
       - name: Build container and test
         id: build_container
-        if: github.event_name != 'pull_request'
+        #if: github.event_name != 'pull_request'
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}          
           IMAGE_TAG: ${{ steps.tag_version.outputs.new_tag }}
+          TARGET_BRANCH: ${{ env.GITHUB_BASE_REF }}
+          LATEST_COMMIT: ${{ env.GITHUB_SHA }}
+          PR_NUMBER: ${{ env.GITHUB_REF }}
+          REPO_URL: ${{ env.GITHUB_SERVER_URL }} ${{ env.GITHUB_REPOSITORY }}
         run: |
-          docker build --build-arg RM_DEV_SL_TOKEN=${{ secrets.RM_DEV_SL_TOKEN }} -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .       
+          echo "TARGET BRANCH: $TARGET_BRANCH"
+          echo "LATEST COMMIT: $LATEST_COMMIT"
+          echo "PR NUMBER: $PR_NUMBER"
+          echo "TARGET REPO URL: $REPO_URL"
+          docker build --build-arg RM_DEV_SL_TOKEN=${{ secrets.RM_DEV_SL_TOKEN }} --build-arg IS_PR=1 --build-arg TARGET_BRANCH="$TARGET_BRANCH" \
+            --build-arg LATEST_COMMIT="$LATEST_COMMIT" --build-arg PR_NUMBER="$PR_NUMBER" --build-arg TARGET_REPO_URL="$REPO_URL" -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .       
           #echo '::set-output name=IMAGE_URI::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG'
           
       - name: Push image to Amazon ECR
