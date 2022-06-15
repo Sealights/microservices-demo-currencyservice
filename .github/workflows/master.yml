@@ -58,7 +58,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}          
           IMAGE_TAG: ${{ steps.tag_version.outputs.new_tag }}
         run: |
-          docker build --build-arg RM_DEV_SL_TOKEN=${{ secrets.RM_DEV_SL_TOKEN }} IS_PR=0 -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .       
+          docker build --build-arg RM_DEV_SL_TOKEN=${{ secrets.RM_DEV_SL_TOKEN }} --build-arg IS_PR=0 -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .       
           #echo '::set-output name=IMAGE_URI::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG'
           
       - name: Push image to Amazon ECR
