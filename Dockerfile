@@ -66,7 +66,7 @@ RUN if [[ $IS_PR -eq 0 ]]; then \
     BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs Config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --branch "master" --build "${BUILD_NAME}"; \
 else \ 
     echo "Pull request"; \
-    BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs Config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --targetBranch "${TARGET_BRANCH}" \
+    BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs prConfig --token $RM_DEV_SL_TOKEN --appname "currencyservice" --targetBranch "${TARGET_BRANCH}" \
     --latestCommit "${LATEST_COMMIT}" --pullRequestNumber "${PR_NUMBER}" --repositoryUrl "${TARGET_REPO_URL}"; \
 fi
 
