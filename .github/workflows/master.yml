@@ -82,7 +82,7 @@ jobs:
           echo "REPO_URL: ${REPO_URL}"  
           echo "LATEST_COMMIT: ${LATEST_COMMIT}"  
           echo "TARGET_BRANCH: ${TARGET_BRANCH}"  
-          echo "PR_NUMBER: ${PR_NUMBER}"            
+          echo "PR_NUMBER: $PR_NUMBER"
           
           docker build --build-arg RM_DEV_SL_TOKEN=${{ secrets.RM_DEV_SL_TOKEN }} --build-arg IS_PR=1 --build-arg TARGET_BRANCH="$TARGET_BRANCH" \
             --build-arg LATEST_COMMIT="$LATEST_COMMIT" --build-arg PR_NUMBER="$PR_NUMBER" --build-arg TARGET_REPO_URL="$REPO_URL" -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .       
