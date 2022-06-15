@@ -110,9 +110,7 @@ jobs:
              export VERSION=${{ steps.tag_version.outputs.new_tag }}
              #export IMAGE=${IMAGE}:$VERSION
              export IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$VERSION
-             echo $IMAGE
-             
-             #sudo snap install yq
+             echo $IMAGE         
 
              cd integration
              cd k3s/$INITIATOR
