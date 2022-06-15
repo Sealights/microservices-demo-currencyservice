@@ -102,6 +102,7 @@ jobs:
              cd k3s/$INITIATOR
              
       - name: Integration build - modify manifest 
+        if: github.event_name != 'pull_request'
         env:
              ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}     
         run: |
@@ -119,6 +120,7 @@ jobs:
              yq -i '(.spec.template.spec.containers[0].image)=strenv(IMAGE)' manifest-pod.yaml
              
       - name: Integration build - create deployment branch 
+        if: github.event_name != 'pull_request'
         run: | 
              cd integration
              cd k3s/$INITIATOR
@@ -134,7 +136,8 @@ jobs:
              git commit -a -m "Deployment amended by $INITIATOR"
              git push --set-upstream origin $BRANCH_NAME      
              
-      - name: Integration build - create Pull Request      
+      - name: Integration build - create Pull Request
+        if: github.event_name != 'pull_request'
         run: |      
              cd integration
              cd k3s/$INITIATOR        
