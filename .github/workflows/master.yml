@@ -63,7 +63,7 @@ jobs:
           export LATEST_COMMIT="${GITHUB_SHA}"
           export TARGET_BRANCH="$TARGET_BRANCH"
           export PR_NUMBER="${{ github.event.number }}"
-          if [[ ${{ github.event_name }} -eq "pull_request" ]]; then export IS_PR=1; else export IS_PR=0; fi;
+          if [[ ${{ github.event_name }}=="pull_request" ]]; then export IS_PR=1; else export IS_PR=0; fi;
           
           echo "REPO_URL: ${REPO_URL}"  
           echo "LATEST_COMMIT: ${LATEST_COMMIT}"  
