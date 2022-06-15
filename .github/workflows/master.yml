@@ -30,8 +30,9 @@ jobs:
           REPO_URL: ${{ github.github_server_url }} ${{ github.github_repository }}
         run: |
           echo "TARGET BRANCH: $TARGET_BRANCH"
-          echo "LATEST COMMIT: ${{ github.github_sha }}"
+          echo "LATEST COMMIT: ${GITHUB_SHA}"
           echo "PR NUMBER: ${{ github.github_ref }}"
+          echo "PR NUMBER: ${GITHUB_REF}"
           echo "TARGET REPO URL: ${{ github.github_server_url }} ${{ github.github_repository }}"
           
           echo "head ref: ${{ github.head_ref }}
