@@ -23,19 +23,12 @@ jobs:
     steps:
       - name: debug
         env:
-          TARGET_BRANCH: ${{ github.base_ref }}
-          LATEST_COMMIT: ${{ github.github_sha }}
-          PR_NUMBER: ${{ github.github_ref }}
-          REPO_URL: ${{ github.github_server_url }} ${{ github.github_repository }}
+          #TARGET_BRANCH: ${{ github.base_ref }}
+          #LATEST_COMMIT: ${{ github.github_sha }}         
+          #REPO_URL: ${{ github.github_server_url }} ${{ github.github_repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          echo "TARGET BRANCH 1: ${{ github.base_ref }}"
-          echo "TARGET BRANCH 2: ${GITHUB_REF_NAME}"
-                              
-          echo "PR NUMBER: ${GITHUB_REF}"                    
-          #echo "head ref: ${{ github.head_ref }}
-          #echo "base ref: ${{ github.base_ref }}      
-          echo "GITHUB_SHA: ${GITHUB_SHA}"
-          echo "SERVER\REPO: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"          
+          echo "PR_NUMBER: $PR_NUMBER"          
     
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
