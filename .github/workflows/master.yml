@@ -24,21 +24,17 @@ jobs:
     steps:
       - name: debug
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}          
-          IMAGE_TAG: ${{ steps.tag_version.outputs.new_tag }}
           TARGET_BRANCH: ${{ github.base_ref }}
           LATEST_COMMIT: ${{ github.github_sha }}
           PR_NUMBER: ${{ github.github_ref }}
           REPO_URL: ${{ github.github_server_url }} ${{ github.github_repository }}
         run: |
           echo "TARGET BRANCH: $TARGET_BRANCH"
-          echo "LATEST COMMIT: $LATEST_COMMIT"
-          echo "PR NUMBER: $PR_NUMBER"
+          echo "LATEST COMMIT: ${{ github.github_sha }}"
+          echo "PR NUMBER: ${{ github.github_ref }}"
           echo "TARGET REPO URL: $REPO_URL"
           echo "head ref: ${{ github.head_ref }}
           echo "base ref: ${{ github.base_ref }}      
-          echo "head ref: ${{ github.head_ref }}
-          echo "base ref: ${{ github.base_ref }}
     
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
