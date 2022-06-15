@@ -71,7 +71,8 @@ jobs:
         run: |                           
           export REPO_URL="SERVER\REPO: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
           export LATEST_COMMIT="${GITHUB_SHA}"
-          export TARGET_BRANCH="${GITHUB_REF_NAME}"
+          #export TARGET_BRANCH="${GITHUB_REF_NAME}"
+          export TARGET_BRANCH="master"
           export PR_NUMBER="${{ github.event.number }}"
        
           echo "REPO_URL: ${REPO_URL}"  
