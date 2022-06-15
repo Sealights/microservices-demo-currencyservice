@@ -61,10 +61,10 @@ ENV OTEL_AGENT_SERVICE_NAME=currencyservice
 ENV OTEL_AGENT_AUTH_TOKEN=$RM_DEV_SL_TOKEN 
 ENV OTEL_AGENT_SECURE_CONNECTION=1
 
-RUN if [[ $IS_PR -eq 1 ]]; then
-echo "true"
-else
-echo "false"
+RUN if [[ $IS_PR -eq 1 ]]; then \
+echo "true" \
+else \
+echo "false" \
 fi
 
 RUN BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs Config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --branch "master" --build "${BUILD_NAME}"
