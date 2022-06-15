@@ -32,7 +32,7 @@ RUN echo "========================================================="
 RUN echo "targetBranch: ${TARGET_BRANCH}"
 RUN echo "latestCommit: ${LATEST_COMMIT}"
 RUN echo "pullRequestNumber ${PR_NUMBER}"
-RUN echo "repositoryUrl "${TARGET_REPO_URL}"
+RUN echo "repositoryUrl ${TARGET_REPO_URL}"
 RUN echo "========================================================="
 
 
