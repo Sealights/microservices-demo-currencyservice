@@ -27,8 +27,7 @@ jobs:
           #LATEST_COMMIT: ${{ github.github_sha }}         
           #REPO_URL: ${{ github.github_server_url }} ${{ github.github_repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: |
-           if [[ ${{ github.event_name }} -eq "pull_request" ]]; then export IS_PR=1; else export IS_PR=0; fi;
+        run: |           
            echo "$IS_PR"
           
       - name: Set up QEMU
@@ -73,16 +72,15 @@ jobs:
           export LATEST_COMMIT="${GITHUB_SHA}"
           export TARGET_BRANCH="$TARGET_BRANCH"
           export PR_NUMBER="${{ github.event.number }}"
-          if [[ ${{ github.event_name }} -eq "pull_request" ]]; then export IS_PR=1 else export IS_PR=0 fi;
+          if [[ ${{ github.event_name }} -eq "pull_request" ]]; then export IS_PR=1; else export IS_PR=0; fi;
           
-       
           echo "REPO_URL: ${REPO_URL}"  
           echo "LATEST_COMMIT: ${LATEST_COMMIT}"  
           echo "TARGET_BRANCH: ${TARGET_BRANCH}"  
           echo "PR_NUMBER: ${PR_NUMBER}"
           echo "EVENT NAME: ${{ github.event_name }}"
           
-          docker build --build-arg RM_DEV_SL_TOKEN=${{ secrets.RM_DEV_SL_TOKEN }} --build-arg IS_PR=1 --build-arg TARGET_BRANCH="$TARGET_BRANCH" \
+          docker build --build-arg RM_DEV_SL_TOKEN=${{ secrets.RM_DEV_SL_TOKEN }} --build-arg IS_PR="$IS_PR" --build-arg TARGET_BRANCH="$TARGET_BRANCH" \
             --build-arg LATEST_COMMIT="$LATEST_COMMIT" --build-arg PR_NUMBER="$PR_NUMBER" --build-arg TARGET_REPO_URL="$REPO_URL" -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .       
           #echo '::set-output name=IMAGE_URI::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG'
           
