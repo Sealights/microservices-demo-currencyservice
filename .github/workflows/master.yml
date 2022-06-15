@@ -78,7 +78,6 @@ jobs:
           
           docker build --build-arg RM_DEV_SL_TOKEN=${{ secrets.RM_DEV_SL_TOKEN }} --build-arg IS_PR="$IS_PR" --build-arg TARGET_BRANCH="$TARGET_BRANCH" \
             --build-arg LATEST_COMMIT="$LATEST_COMMIT" --build-arg PR_NUMBER="$PR_NUMBER" --build-arg TARGET_REPO_URL="$REPO_URL" -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .       
-          #echo '::set-output name=IMAGE_URI::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG'
           
       - name: Push image to Amazon ECR
         if: github.event_name != 'pull_request'
