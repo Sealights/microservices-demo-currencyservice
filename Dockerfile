@@ -92,7 +92,8 @@ RUN BUILD_NAME=$(date +%F_%T) && echo "BUILD NAME: ${BUILD_NAME}"
 #RUN BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs prConfig --token $RM_DEV_SL_TOKEN --appname "currencyservice" --targetBranch "master" \
 #    --latestCommit "abc" --pullRequestNumber "1" --repositoryUrl "http";
 
-RUN ./node_modules/.bin/slnodejs Config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --branch "master" --build "${BUILD_NAME}"
+#RUN ./node_modules/.bin/slnodejs Config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --branch "master" --build "${BUILD_NAME}"
+RUN BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --branch "master" --build "abc"
 
 #if
 #RUN if (IS_PR) BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs Config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --branch "master" --build "${BUILD_NAME}"
