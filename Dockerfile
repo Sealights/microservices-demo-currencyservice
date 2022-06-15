@@ -35,7 +35,6 @@ RUN echo "pullRequestNumber ${PR_NUMBER}"
 RUN echo "repositoryUrl ${TARGET_REPO_URL}"
 RUN echo "========================================================="
 
-
 FROM base as builder
 
 # Some packages (e.g. @google-cloud/profiler) require additional
