@@ -57,10 +57,10 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}          
           IMAGE_TAG: ${{ steps.tag_version.outputs.new_tag }}
-          TARGET_BRANCH: ${{ env.GITHUB_BASE_REF }}
-          LATEST_COMMIT: ${{ env.GITHUB_SHA }}
-          PR_NUMBER: ${{ env.GITHUB_REF }}
-          REPO_URL: ${{ env.GITHUB_SERVER_URL }} ${{ env.GITHUB_REPOSITORY }}
+          TARGET_BRANCH: ${{ github.GITHUB_BASE_REF }}
+          LATEST_COMMIT: ${{ github.GITHUB_SHA }}
+          PR_NUMBER: ${{ github.GITHUB_REF }}
+          REPO_URL: ${{ github.GITHUB_SERVER_URL }} ${{ github.GITHUB_REPOSITORY }}
         run: |
           echo "TARGET BRANCH: $TARGET_BRANCH"
           echo "LATEST COMMIT: $LATEST_COMMIT"
