@@ -86,7 +86,7 @@ RUN BUILD_NAME=$(date +%F_%T)
 #    --latestCommit "${LATEST_COMMIT}" --pullRequestNumber "${PR_NUMBER}" --repositoryUrl "${TARGET_REPO_URL}"; \
 #fi
 
-echo "BUILD NAME: ${BUILD_NAME}"
+RUN echo "BUILD NAME: ${BUILD_NAME}"
 RUN ./node_modules/.bin/slnodejs Config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --branch "master" --build "${BUILD_NAME}"
 
 #if
