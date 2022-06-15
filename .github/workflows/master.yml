@@ -72,23 +72,13 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}          
           IMAGE_TAG: ${{ steps.tag_version.outputs.new_tag }}
-          TARGET_BRANCH: ${{ github.base_ref }}
-          #LATEST_COMMIT: ${{ github.github_sha }}
-          #PR_NUMBER: ${{ GITHUB_REF }}
-          #REPO_URL: ${{ GITHUB_SERVER_URL }} ${{ GITHUB_REPOSITORY }}
-        run: |        
-          #echo "TARGET BRANCH: ${{ github.base_ref }}"
-          #echo "PR NUMBER: ${GITHUB_REF}"                    
-          #echo "head ref: ${{ github.head_ref }}
-          #echo "base ref: ${{ github.base_ref }}      
-          #echo "GITHUB_SHA: ${GITHUB_SHA}"
-          #echo "SERVER\REPO: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
-                    
+          PR_NUMBER: "${{ github.event.number }}"
+        run: |                           
           export REPO_URL="SERVER\REPO: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
           export LATEST_COMMIT="${GITHUB_SHA}"
           export TARGET_BRANCH="${GITHUB_REF_NAME}"
-          export PR_NUMBER="${{ github.event.number }}"
-          
+          #export PR_NUMBER="${{ github.event.number }}"
+       
           echo "REPO_URL: ${REPO_URL}"  
           echo "LATEST_COMMIT: ${LATEST_COMMIT}"  
           echo "TARGET_BRANCH: ${TARGET_BRANCH}"  
