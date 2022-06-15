@@ -78,7 +78,7 @@ jobs:
         run: |        
           echo "TARGETTT: $TARGET_BRANCH"
           echo "TARGETTT: ${TARGET_BRANCH}"
-          echo "TARGETTT: ${{ TARGET_BRANCH }}"
+
           echo "TARGET BRANCH: ${{ github.base_ref }}"
           echo "PR NUMBER: ${GITHUB_REF}"                    
           #echo "head ref: ${{ github.head_ref }}
