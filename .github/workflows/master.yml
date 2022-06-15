@@ -29,6 +29,7 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           echo "PR_NUMBER: $PR_NUMBER"          
+          echo ${{ github.event.pull_request.base.ref }}
     
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
