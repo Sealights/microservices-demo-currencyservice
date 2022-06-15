@@ -28,17 +28,13 @@ jobs:
           PR_NUMBER: ${{ github.github_ref }}
           REPO_URL: ${{ github.github_server_url }} ${{ github.github_repository }}
         run: |
-          echo "TARGET BRANCH: $TARGET_BRANCH"          
-          echo "PR NUMBER: ${{ github.github_ref }}"
-          echo "PR NUMBER: ${GITHUB_REF}"
-          
-          
-          echo "head ref: ${{ github.head_ref }}
-          echo "base ref: ${{ github.base_ref }}      
+          echo "TARGET BRANCH: ${{ github.base_ref }}"
+          echo "PR NUMBER: ${GITHUB_REF}"                    
+          #echo "head ref: ${{ github.head_ref }}
+          #echo "base ref: ${{ github.base_ref }}      
           echo "GITHUB_SHA: ${GITHUB_SHA}"
-          echo "SERVER\REPO: ${GITHUB_SERVER_URL} ${GITHUB_REPOSITORY}"
+          echo "SERVER\REPO: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
           
-
     
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
