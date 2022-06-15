@@ -15,13 +15,21 @@ env:
   GH_USER_EMAIL: ${{ secrets.GH_USER_EMAIL }}
   INITIATOR: "currency"
   ECR_REPOSITORY: microservices-demo-currencyservice
-  #IMAGE: "474620256508.dkr.ecr.us-east-2.amazonaws.com/microservices-demo-currencyservice"
   GH_DEPLOYMENT_REPO: "Sealights/microservices-demo-deployment.git"
   
 jobs:
   build-test-push:
     runs-on: ubuntu-latest
     steps:
+      - name: debug
+        env:
+          #TARGET_BRANCH: ${{ github.base_ref }}
+          #LATEST_COMMIT: ${{ github.github_sha }}         
+          #REPO_URL: ${{ github.github_server_url }} ${{ github.github_repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          echo "PR_NUMBER: $PR_NUMBER"          
+    
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
@@ -39,7 +47,8 @@ jobs:
 
       - name: Install yq
         run: |
-          wget https://github.com/mikefarah/yq/releases/download/v4.25.2/yq_linux_386 -O /usr/bin/yq && chmod +x /usr/bin/yq
+          wget https://github.com/mikefarah/yq/releases/download/v4.25.2/yq_linux_386 -O /usr/bin/yq 
+          chmod +x /usr/bin/yq
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -53,11 +62,25 @@ jobs:
           
       - name: Build container and test
         id: build_container
+        #if: github.event_name != 'pull_request'
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}          
           IMAGE_TAG: ${{ steps.tag_version.outputs.new_tag }}
-        run: |
-          docker build --build-arg RM_DEV_SL_TOKEN=${{ secrets.RM_DEV_SL_TOKEN }} -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .       
+          PR_NUMBER: "${{ github.event.number }}"
+          TARGET_BRANCH: "${{ github.base_ref }}"
+        run: |                           
+          export REPO_URL="SERVER\REPO: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
+          export LATEST_COMMIT="${GITHUB_SHA}"
+          export TARGET_BRANCH="${GITHUB_REF_NAME}"
+          export PR_NUMBER="${{ github.event.number }}"
+       
+          echo "REPO_URL: ${REPO_URL}"  
+          echo "LATEST_COMMIT: ${LATEST_COMMIT}"  
+          echo "TARGET_BRANCH: ${TARGET_BRANCH}"  
+          echo "PR_NUMBER: ${PR_NUMBER}"
+          
+          docker build --build-arg RM_DEV_SL_TOKEN=${{ secrets.RM_DEV_SL_TOKEN }} --build-arg IS_PR=1 --build-arg TARGET_BRANCH="$TARGET_BRANCH" \
+            --build-arg LATEST_COMMIT="$LATEST_COMMIT" --build-arg PR_NUMBER="$PR_NUMBER" --build-arg TARGET_REPO_URL="$REPO_URL" -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .       
           #echo '::set-output name=IMAGE_URI::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG'
           
       - name: Push image to Amazon ECR
@@ -74,7 +97,7 @@ jobs:
              git config --global user.name ${GH_USER_NAME}
              git config --global user.email ${GH_USER_EMAIL}
             
-             export GITHUB_TOKEN=${GH_TOKEN}
+             export GITHUB_TOKEN=${GH_TOKEN}             
                                        
              git clone https://${GH_TOKEN}@github.com/Sealights/microservices-demo-deployment.git integration
              git remote set-url origin https://${GH_TOKEN}@github.com/Sealights/microservices-demo-deployment.git
