@@ -15,7 +15,6 @@ env:
   GH_USER_EMAIL: ${{ secrets.GH_USER_EMAIL }}
   INITIATOR: "currency"
   ECR_REPOSITORY: microservices-demo-currencyservice
-  #IMAGE: "474620256508.dkr.ecr.us-east-2.amazonaws.com/microservices-demo-currencyservice"
   GH_DEPLOYMENT_REPO: "Sealights/microservices-demo-deployment.git"
   
 jobs:
