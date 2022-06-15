@@ -75,8 +75,10 @@ ENV OTEL_AGENT_SERVICE_NAME=currencyservice
 ENV OTEL_AGENT_AUTH_TOKEN=$RM_DEV_SL_TOKEN 
 ENV OTEL_AGENT_SECURE_CONNECTION=1
 
-RUN export BUILD_NAME=$(date +%F_%T)
-RUN echo "$(date +%F_%T)"
+ENV BUILD_NAME=$(date +%F_%T)
+#RUN export BUILD_NAME=$(date +%F_%T)
+#RUN echo "$(date +%F_%T)"
+
 
 #RUN if [[ $IS_PR -eq 0 ]]; then \
 #    echo "Check-in to repo"; \
