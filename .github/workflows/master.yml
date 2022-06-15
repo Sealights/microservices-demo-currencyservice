@@ -39,11 +39,11 @@ jobs:
       - name: Install yq
         run: |
           mkdir yq
-          wget https://github.com/mikefarah/yq/releases/download/v4.25.2/yq_linux_386 -O ./yq 
+          wget https://github.com/mikefarah/yq/releases/download/v4.25.2/yq_linux_386 -O ~/yq 
           #-O /usr/bin/yq 
           #chmod +x /usr/bin/yq
-          chmod +x ./yq/yq
-          alias yq="~./yq/yq"
+          chmod +x yq
+          alias yq="~./yq"
 
       - name: Login to Amazon ECR
         id: login-ecr
