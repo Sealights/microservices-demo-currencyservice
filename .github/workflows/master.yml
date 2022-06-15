@@ -32,6 +32,7 @@ jobs:
           echo "PR NUMBER: ${{ github.github_ref }}"
           echo "PR NUMBER: ${GITHUB_REF}"
           
+          
           echo "head ref: ${{ github.head_ref }}
           echo "base ref: ${{ github.base_ref }}      
           echo "GITHUB_SHA: ${GITHUB_SHA}"
