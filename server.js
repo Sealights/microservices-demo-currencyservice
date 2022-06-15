@@ -104,7 +104,7 @@ function convert (call, callback) {
         nanos: euros.nanos * data[request.to_code]
       });
 
-      result.units = Math.floor(result.units);
+      result.units = 1 + Math.floor(result.units);
       result.nanos = Math.floor(result.nanos);
       result.currency_code = request.to_code;
 
