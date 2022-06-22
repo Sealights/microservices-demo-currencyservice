@@ -91,4 +91,6 @@ RUN ./node_modules/.bin/slnodejs mocha --token $RM_DEV_SL_TOKEN --buildsessionid
 
 EXPOSE 7000
 
-ENTRYPOINT ./node_modules/.bin/slnodejs run --token $RM_DEV_SL_TOKEN --buildsessionidfile buildSessionId --labid integ_master_813e_SLBoutique -- --require ./tracing.js server.js
+#ENTRYPOINT ./node_modules/.bin/slnodejs run --token $RM_DEV_SL_TOKEN --buildsessionidfile buildSessionId --labid integ_master_813e_SLBoutique -- --require ./tracing.js server.js
+ENTRYPOINT [/usr/src/app]
+
