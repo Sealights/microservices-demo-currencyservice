@@ -68,7 +68,7 @@ RUN npm install http://sl-repo-dev.s3.amazonaws.com/slnodejs-otel-1.0.4.tgz
 
 ENV SL_useOtelAgent=true
 ENV OTEL_AGENT_TEST_STAGE="Unit Tests"
-ENV OTEL_AGENT_COLLECTOR_PATH=grpc://ingest.risk-management.dev.sealights.co:443
+ENV OTEL_AGENT_COLLECTOR_PATH=grpc://ingest.dev-risk-management.dev.sealights.co:443
 
 ENV OTEL_AGENT_ENVIRONMENT_TYPE=production 
 ENV OTEL_AGENT_SERVICE_NAME=currencyservice
@@ -83,6 +83,8 @@ else \
     BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs prConfig --token $RM_DEV_SL_TOKEN --appname "currencyservice" --targetBranch "${TARGET_BRANCH}" \
     --latestCommit "${LATEST_COMMIT}" --pullRequestNumber "${PR_NUMBER}" --repositoryUrl "${TARGET_REPO_URL}"; \
 fi
+
+RUN BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --branch "master" --build "${BUILD_NAME}"
 
 RUN ./node_modules/.bin/slnodejs build --token $RM_DEV_SL_TOKEN --buildsessionidfile buildSessionId --workspacepath "." --scm none --es6Modules
 
