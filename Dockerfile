@@ -68,7 +68,6 @@ RUN npm install http://sl-repo-dev.s3.amazonaws.com/slnodejs-otel-1.0.4.tgz
 
 ENV SL_useOtelAgent=true
 ENV OTEL_AGENT_TEST_STAGE="Unit Tests"
-ENV OTEL_AGENT_COLLECTOR_PATH=grpc://ingest.dev-risk-management.dev.sealights.co:443
 
 ENV OTEL_AGENT_ENVIRONMENT_TYPE=production 
 ENV OTEL_AGENT_SERVICE_NAME=currencyservice
