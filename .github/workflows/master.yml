@@ -15,13 +15,12 @@ env:
   GH_USER_EMAIL: ${{ secrets.GH_USER_EMAIL }}
   INITIATOR: "currency"
   ECR_REPOSITORY: microservices-demo-currencyservice
-  #IMAGE: "474620256508.dkr.ecr.us-east-2.amazonaws.com/microservices-demo-currencyservice"
   GH_DEPLOYMENT_REPO: "Sealights/microservices-demo-deployment.git"
   
 jobs:
   build-test-push:
     runs-on: ubuntu-latest
-    steps:
+    steps:         
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
@@ -39,7 +38,12 @@ jobs:
 
       - name: Install yq
         run: |
-          wget https://github.com/mikefarah/yq/releases/download/v4.25.2/yq_linux_386 -O /usr/bin/yq && chmod +x /usr/bin/yq
+          mkdir yq
+          wget https://github.com/mikefarah/yq/releases/download/v4.25.2/yq_linux_386 -O ~/yq 
+          #-O /usr/bin/yq 
+          #chmod +x /usr/bin/yq
+          chmod +x yq
+          alias yq="~./yq"
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -53,13 +57,27 @@ jobs:
           
       - name: Build container and test
         id: build_container
-        if: github.event_name != 'pull_request'
+        #if: github.event_name != 'pull_request'
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}          
           IMAGE_TAG: ${{ steps.tag_version.outputs.new_tag }}
-        run: |
-          docker build --build-arg RM_DEV_SL_TOKEN=${{ secrets.RM_DEV_SL_TOKEN }} -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .       
-          #echo '::set-output name=IMAGE_URI::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG'
+          TARGET_BRANCH: "${{ github.event.pull_request.base.ref }}"          
+        run: |                           
+          export REPO_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
+          export LATEST_COMMIT="${GITHUB_SHA}"
+          export TARGET_BRANCH="$TARGET_BRANCH"
+          export PR_NUMBER="${{ github.event.number }}"
+          if [[ ${{ github.event_name }} == "pull_request" ]]; then export IS_PR=1; else export IS_PR=0; fi;
+          
+          echo "REPO_URL: ${REPO_URL}"  
+          echo "LATEST_COMMIT: ${LATEST_COMMIT}"  
+          echo "TARGET_BRANCH: ${TARGET_BRANCH}"  
+          echo "PR_NUMBER: ${PR_NUMBER}"
+          echo "EVENT NAME: ${{ github.event_name }}"
+          echo "IS_PR: ${IS_PR}"
+          
+          docker build --build-arg RM_DEV_SL_TOKEN=${{ secrets.RM_DEV_SL_TOKEN }} --build-arg IS_PR="$IS_PR" --build-arg TARGET_BRANCH="$TARGET_BRANCH" \
+            --build-arg LATEST_COMMIT="$LATEST_COMMIT" --build-arg PR_NUMBER="$PR_NUMBER" --build-arg TARGET_REPO_URL="$REPO_URL" -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .       
           
       - name: Push image to Amazon ECR
         if: github.event_name != 'pull_request'
@@ -71,11 +89,12 @@ jobs:
 
       - name: Integration build - fetch deployment repo
         id: branch_creation
+        if: github.event_name != 'pull_request'
         run: |             
              git config --global user.name ${GH_USER_NAME}
              git config --global user.email ${GH_USER_EMAIL}
             
-             export GITHUB_TOKEN=${GH_TOKEN}
+             export GITHUB_TOKEN=${GH_TOKEN}             
                                        
              git clone https://${GH_TOKEN}@github.com/Sealights/microservices-demo-deployment.git integration
              git remote set-url origin https://${GH_TOKEN}@github.com/Sealights/microservices-demo-deployment.git
@@ -83,15 +102,14 @@ jobs:
              cd k3s/$INITIATOR
              
       - name: Integration build - modify manifest 
+        if: github.event_name != 'pull_request'
         env:
              ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}     
         run: |
              export VERSION=${{ steps.tag_version.outputs.new_tag }}
              #export IMAGE=${IMAGE}:$VERSION
              export IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$VERSION
-             echo $IMAGE
-             
-             #sudo snap install yq
+             echo $IMAGE         
 
              cd integration
              cd k3s/$INITIATOR
@@ -100,6 +118,7 @@ jobs:
              yq -i '(.spec.template.spec.containers[0].image)=strenv(IMAGE)' manifest-pod.yaml
              
       - name: Integration build - create deployment branch 
+        if: github.event_name != 'pull_request'
         run: | 
              cd integration
              cd k3s/$INITIATOR
@@ -115,7 +134,8 @@ jobs:
              git commit -a -m "Deployment amended by $INITIATOR"
              git push --set-upstream origin $BRANCH_NAME      
              
-      - name: Integration build - create Pull Request      
+      - name: Integration build - create Pull Request
+        if: github.event_name != 'pull_request'
         run: |      
              cd integration
              cd k3s/$INITIATOR        
