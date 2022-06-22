@@ -15,26 +15,7 @@
 FROM node:16-alpine as base
 
 ARG RM_DEV_SL_TOKEN=local
-ARG IS_PR=""
-ARG TARGET_BRANCH=""
-ARG LATEST_COMMIT=""
-ARG PR_NUMBER=""
-ARG TARGET_REPO_URL=""
-
 ENV RM_DEV_SL_TOKEN ${RM_DEV_SL_TOKEN}
-ENV IS_PR ${IS_PR}
-ENV TARGET_BRANCH ${TARGET_BRANCH}
-ENV LATEST_COMMIT ${LATEST_COMMIT}
-ENV PR_NUMBER ${PR_NUMBER}
-ENV TARGET_REPO_URL ${TARGET_REPO_URL}
-
-RUN echo "========================================================="
-RUN echo "targetBranch: ${TARGET_BRANCH}"
-RUN echo "latestCommit: ${LATEST_COMMIT}"
-RUN echo "pullRequestNumber ${PR_NUMBER}"
-RUN echo "repositoryUrl ${TARGET_REPO_URL}"
-RUN echo "========================================================="
-
 
 FROM base as builder
 
@@ -63,25 +44,10 @@ COPY --from=builder /usr/src/app/node_modules ./node_modules
 
 COPY . .
 
-RUN npm install http://sl-repo-dev.s3.amazonaws.com/sl-otel-0.2.9.tgz
-RUN npm install http://sl-repo-dev.s3.amazonaws.com/slnodejs-otel-1.0.4.tgz
+RUN npm install https://sl-repo-dev.s3.amazonaws.com/sl-otel-agent-0.3.2.tgz
+RUN npm install https://sl-repo-dev.s3.amazonaws.com/slnodejs-1.0.4.tgz
 
-ENV SL_useOtelAgent=true
-ENV OTEL_AGENT_TEST_STAGE="Unit Tests"
-
-ENV OTEL_AGENT_ENVIRONMENT_TYPE=production 
-ENV OTEL_AGENT_SERVICE_NAME=currencyservice
-ENV OTEL_AGENT_AUTH_TOKEN=$RM_DEV_SL_TOKEN 
-ENV OTEL_AGENT_SECURE_CONNECTION=1
-
-RUN if [[ $IS_PR -eq 0 ]]; then \
-    echo "Check-in to repo"; \
-    BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --branch "master" --build "${BUILD_NAME}" ; \
-else \ 
-    echo "Pull request"; \
-    BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs prConfig --token $RM_DEV_SL_TOKEN --appname "currencyservice" --targetBranch "${TARGET_BRANCH}" \
-    --latestCommit "${LATEST_COMMIT}" --pullRequestNumber "${PR_NUMBER}" --repositoryUrl "${TARGET_REPO_URL}"; \
-fi
+ENV SL_useOtelAgentInReporter=1
 
 RUN BUILD_NAME=$(date +%F_%T) && ./node_modules/.bin/slnodejs config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --branch "master" --build "${BUILD_NAME}"
 
@@ -92,4 +58,3 @@ RUN ./node_modules/.bin/slnodejs mocha --token $RM_DEV_SL_TOKEN --buildsessionid
 EXPOSE 7000
 
 ENTRYPOINT ./node_modules/.bin/slnodejs run --token $RM_DEV_SL_TOKEN --buildsessionidfile buildSessionId --labid integ_master_813e_SLBoutique -- --require ./tracing.js server.js
-
