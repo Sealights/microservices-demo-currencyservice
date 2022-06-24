@@ -9,7 +9,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@grpc/grpc-js": "^1.5.7",
+    "@grpc/grpc-js": "1.6.2",
     "@grpc/proto-loader": "^0.6.9",
     "@opentelemetry/auto-instrumentations-node": "^0.27.3",
     "@opentelemetry/exporter-trace-otlp-grpc": "^0.27.0",
