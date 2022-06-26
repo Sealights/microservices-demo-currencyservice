@@ -56,6 +56,7 @@ function _loadProto (path) {
  * Uses public data from European Central Bank
  */
 function _getCurrencyData (callback) {
+  console.log('lala');
   const data = require('./data/currency_conversion.json');
   callback(data);
 }
@@ -75,7 +76,7 @@ function _carry (amount) {
  * Lists the supported currencies
  */
 function getSupportedCurrencies (call, callback) {
-  logger.info('Getting supported currencies...');
+  logger.info('Getting supported currencies... zumzum');
   _getCurrencyData((data) => {
     callback(null, {currency_codes: Object.keys(data)});
   });
