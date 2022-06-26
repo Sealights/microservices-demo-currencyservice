@@ -56,6 +56,7 @@ function _loadProto (path) {
  * Uses public data from European Central Bank
  */
 function _getCurrencyData (callback) {
+  console.log('lala');
   const data = require('./data/currency_conversion.json');
   callback(data);
 }
