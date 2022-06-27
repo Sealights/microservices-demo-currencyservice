@@ -44,7 +44,8 @@ FROM base as builder
 RUN apk add --update --no-cache \
     python3 \
     make \
-    g++
+    g++ \
+    git
 
 WORKDIR /usr/src/app
 
