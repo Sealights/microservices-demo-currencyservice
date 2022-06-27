@@ -44,8 +44,7 @@ FROM base as builder
 RUN apk add --update --no-cache \
     python3 \
     make \
-    g++ \
-    git
+    g++
 RUN apt-get install -qq  -y git
 WORKDIR /usr/src/app
 
@@ -54,6 +53,9 @@ COPY package*.json ./
 RUN npm install --only=production
 
 FROM base
+
+RUN apk add --update --no-cache \
+    git
 
 RUN GRPC_HEALTH_PROBE_VERSION=v0.4.7 && \
     wget -qO/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-amd64 && \
