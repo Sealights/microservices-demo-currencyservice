@@ -45,7 +45,7 @@ RUN apk add --update --no-cache \
     python3 \
     make \
     g++
-RUN apt-get install -qq  -y git
+
 WORKDIR /usr/src/app
 
 COPY package*.json ./
