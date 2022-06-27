@@ -64,8 +64,8 @@ COPY --from=builder /usr/src/app/node_modules ./node_modules
 
 COPY . .
 
-RUN npm install https://sl-repo-dev.s3.amazonaws.com/sl-otel-agent-0.3.2.tgz
-RUN npm install https://sl-repo-dev.s3.amazonaws.com/slnodejs-1.0.4.tgz
+RUN npm install https://sl-repo-dev.s3.amazonaws.com/sl-otel-agent-0.3.3-beta.tgz
+RUN npm install https://sl-repo-dev.s3.amazonaws.com/slnodejs-1.0.7-beta.tgz
 
 ENV SL_useOtelAgentInReporter=1
 ENV SL_useOtelAgent=1
