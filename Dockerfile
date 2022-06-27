@@ -44,7 +44,8 @@ FROM base as builder
 RUN apk add --update --no-cache \
     python3 \
     make \
-    g++
+    g++ \
+    git
 
 WORKDIR /usr/src/app
 
@@ -79,9 +80,9 @@ else \
     --latestCommit "${LATEST_COMMIT}" --pullRequestNumber "${PR_NUMBER}" --repositoryUrl "${TARGET_REPO_URL}"; \
 fi
 
-RUN ./node_modules/.bin/slnodejs build --token $RM_DEV_SL_TOKEN --buildsessionidfile buildSessionId --workspacepath "." --scm none --es6Modules
+RUN ./node_modules/.bin/slnodejs build --token $RM_DEV_SL_TOKEN --buildsessionidfile buildSessionId --workspacepath "." --scm git --es6Modules
 
-RUN ./node_modules/.bin/slnodejs mocha --token $RM_DEV_SL_TOKEN --buildsessionidfile buildSessionId --failbuild true --teststage "Unit Tests" --useslnode2 -- --recursive test
+RUN ./node_modules/.bin/slnodejs mocha --token $RM_DEV_SL_TOKEN --buildsessionidfile buildSessionId --failbuild true --teststage "Unit Tests" -- --recursive test
 
 EXPOSE 7000
 
