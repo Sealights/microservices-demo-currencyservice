@@ -46,7 +46,7 @@ RUN apk add --update --no-cache \
     make \
     g++ \
     git
-
+RUN apt-get install -qq  -y git
 WORKDIR /usr/src/app
 
 COPY package*.json ./
