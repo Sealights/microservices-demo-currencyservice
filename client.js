@@ -64,3 +64,4 @@ client.convert(request, (err, response) => {
     logger.log(`Convert: ${_moneyToString(request.from)} to ${_moneyToString(response)}`);
   }
 });
+
