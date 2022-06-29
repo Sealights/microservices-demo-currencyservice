@@ -59,9 +59,10 @@ jobs:
         id: build_container
         #if: github.event_name != 'pull_request'
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}          
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ steps.tag_version.outputs.new_tag }}
-          TARGET_BRANCH: "${{ github.event.pull_request.base.ref }}"          
+          TARGET_BRANCH: "${{ github.event.pull_request.base.ref }}"
+          BUILD_NAME: "${{ steps.tag_version.outputs.new_tag }}"
         run: |                           
           export REPO_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
           export LATEST_COMMIT="${GITHUB_SHA}"
