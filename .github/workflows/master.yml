@@ -77,7 +77,7 @@ jobs:
           echo "EVENT NAME: ${{ github.event_name }}"
           echo "IS_PR: ${IS_PR}"
           
-          docker build --build-arg RM_DEV_SL_TOKEN=${{ secrets.RM_DEV_SL_TOKEN }} --build-arg IS_PR="$IS_PR" --build-arg TARGET_BRANCH="$TARGET_BRANCH" \
+          docker build --build-arg RM_DEV_SL_TOKEN=${{ secrets.RM_DEV_SL_TOKEN }} --build-arg BUILD_NAME="$BUILD_NAME" --build-arg IS_PR="$IS_PR" --build-arg TARGET_BRANCH="$TARGET_BRANCH" \
             --build-arg LATEST_COMMIT="$LATEST_COMMIT" --build-arg PR_NUMBER="$PR_NUMBER" --build-arg TARGET_REPO_URL="$REPO_URL" -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .       
           
       - name: Push image to Amazon ECR
