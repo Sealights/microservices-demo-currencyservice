@@ -69,10 +69,7 @@ COPY . .
 
 
 RUN npm install https://sl-repo-dev.s3.amazonaws.com/sl-otel-agent-0.4.1.tgz
-RUN npm install https://sl-repo-dev.s3.amazonaws.com/slnodejs-1.0.8.tgz
-
-ENV SL_useOtelAgentInReporter=1
-ENV SL_useOtelAgent=1
+RUN npm install https://sl-repo-dev.s3.amazonaws.com/slnodejs-1.0.9.tgz
 
 RUN if [[ $IS_PR -eq 0 ]]; then \
     echo "Check-in to repo"; \
