@@ -34,7 +34,7 @@ const logger = pino({
   levelKey: 'severity',
   useLevelLabels: true
 });
-
+logger.info('Hello from currency service!!!! zibi');
 const request = {
   from: {
     currency_code: 'CHF',
