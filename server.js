@@ -76,7 +76,7 @@ function _carry (amount) {
  * Lists the supported currencies
  */
 function getSupportedCurrencies (call, callback) {
-  logger.info('Getting supported currencies... 01:09 ');
+  logger.info('Getting supported currencies... 04:15 ');
   _getCurrencyData((data) => {
     callback(null, {currency_codes: Object.keys(data)});
   });
