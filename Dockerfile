@@ -70,7 +70,7 @@ COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY . .
 
 
-RUN npm install https://sl-repo-dev.s3.amazonaws.com/sl-otel-agent-latest-beta.tgz
+RUN npm install https://sl-repo-dev.s3.amazonaws.com/sl-otel-agent-0.4.1.tgz
 RUN npm install https://sl-repo-dev.s3.amazonaws.com/slnodejs-1.0.9.tgz
 
 RUN if [[ $IS_PR -eq 0 ]]; then \
