@@ -71,6 +71,7 @@ COPY . .
 
 
 RUN npm install https://sl-repo-dev.s3.amazonaws.com/sl-otel-agent-0.4.2.tgz
+
 RUN npm install https://sl-repo-dev.s3.amazonaws.com/slnodejs-1.1.0.tgz
 
 
