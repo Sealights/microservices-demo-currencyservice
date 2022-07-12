@@ -73,6 +73,7 @@ COPY . .
 RUN npm install https://sl-repo-dev.s3.amazonaws.com/sl-otel-agent-0.4.2.tgz
 RUN npm install https://sl-repo-dev.s3.amazonaws.com/slnodejs-1.1.0.tgz
 
+
 RUN if [[ $IS_PR -eq 0 ]]; then \
     echo "Check-in to repo"; \
     ./node_modules/.bin/slnodejs config --token $RM_DEV_SL_TOKEN --appname "currencyservice" --branch "master" --build "${BUILD_NAME}" ; \
