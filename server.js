@@ -86,6 +86,8 @@ function getSupportedCurrencies (call, callback) {
  */
 function convert (call, callback) {
   try {
+    logger.info(`conversion request received`);
+    
     _getCurrencyData((data) => {
       const request = call.request;
 
