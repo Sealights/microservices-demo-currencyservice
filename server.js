@@ -18,6 +18,7 @@ const path = require('path');
 const grpc = require('@grpc/grpc-js');
 const pino = require('pino');
 const protoLoader = require('@grpc/proto-loader');
+const { startHttpServer } = require('./http-server')
 
 const MAIN_PROTO_PATH = path.join(__dirname, './proto/demo.proto');
 const HEALTH_PROTO_PATH = path.join(__dirname, './proto/grpc/health/v1/health.proto');
@@ -87,7 +88,7 @@ function getSupportedCurrencies (call, callback) {
 function convert (call, callback) {
   try {
     logger.info(`conversion request received`);
-    
+
     _getCurrencyData((data) => {
       const request = call.request;
 
@@ -145,5 +146,7 @@ function main () {
     },
    );
 }
+
+startHttpServer()
 
 main();
