@@ -21,32 +21,36 @@ const bodyParser = require('body-parser')
 const { convert, getSupportedCurrencies } = require('./core')
 
 
-const app = express()
-const port = 7001
+const startHttpServer = () => {
+	const app = express()
+	const port = 7001
 
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+	app.use(bodyParser.urlencoded({ extended: false }))
+	app.use(bodyParser.json())
 
-app.get('/get-supported-currencies', (req, res) => {
-	getSupportedCurrencies(req.body, (err, result) => {
-		if(err) {
-			return res.status(400).send(err)
-		}
+	app.get('/get-supported-currencies', (req, res) => {
+		getSupportedCurrencies(req.body, (err, result) => {
+			if(err) {
+				return res.status(400).send(err)
+			}
 
-		return res.send(result)
+			return res.send(result)
+		})
 	})
-})
 
-app.post('/convert', (req, res) => {
-	convert(req.body, (err, result) => {
-		if(err) {
-			return res.status(400).send(err)
-		}
+	app.post('/convert', (req, res) => {
+		convert(req.body, (err, result) => {
+			if(err) {
+				return res.status(400).send(err)
+			}
 
-		return res.send(result)
+			return res.send(result)
+		})
 	})
-})
 
-app.listen(port, () => {
-	console.log(`Example app listening on port ${port}`)
-})
+	app.listen(port, () => {
+		console.log(`Example app listening on port ${port}`)
+	})
+}
+
+module.exports = { startHttpServer }
