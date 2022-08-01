@@ -39,7 +39,7 @@ const startHttpServer = () => {
 	})
 
 	app.post('/convert', (req, res) => {
-		convert(req.body, (err, result) => {
+		convert({ request: req.body }, (err, result) => {
 			if(err) {
 				return res.status(400).send(err)
 			}
