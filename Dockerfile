@@ -87,7 +87,7 @@ RUN ./node_modules/.bin/slnodejs build --token $RM_DEV_SL_TOKEN --buildsessionid
 
 RUN ./node_modules/.bin/slnodejs mocha --token $RM_DEV_SL_TOKEN --buildsessionidfile buildSessionId --failbuild true --teststage "Unit Tests" -- --recursive test
 
-EXPOSE 7000
+EXPOSE 7000 7001
 
 ENTRYPOINT ./node_modules/.bin/slnodejs run --token $RM_DEV_SL_TOKEN --buildsessionidfile buildSessionId --labid integ_master_813e_SLBoutique -- server.js
 
