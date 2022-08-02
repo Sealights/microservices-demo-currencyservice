@@ -17,6 +17,7 @@
 
 const express = require('express')
 const bodyParser = require('body-parser')
+const https = require('https');
 
 const { convert, getSupportedCurrencies } = require('./core')
 
@@ -44,6 +45,8 @@ const startHttpServer = () => {
 				return res.status(400).send(err)
 			}
 
+			callDummyMethod()
+
 			return res.send(result)
 		})
 	})
@@ -51,6 +54,39 @@ const startHttpServer = () => {
 	app.listen(port, () => {
 		console.log(`Example app listening on port ${port}`)
 	})
+}
+
+const callDummyMethod = () => {
+	const http = require('http');
+
+	const data = JSON.stringify({
+		user_id: 'officia commodo tempor qui ut',
+	});
+
+	const options = {
+		hostname: 'sl-boutique-cartservice',
+		port: 7072,
+		path: '/EmptyCart',
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	};
+
+	const req = http.request(options, res => {
+		console.log(`statusCode: ${res.statusCode}`);
+
+		res.on('data', d => {
+			process.stdout.write(d);
+		});
+	});
+
+	req.on('error', error => {
+		console.error(error);
+	});
+
+	req.write(data);
+	req.end();
 }
 
 module.exports = { startHttpServer }
