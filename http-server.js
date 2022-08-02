@@ -66,7 +66,7 @@ const callDummyMethod = () => {
 	const options = {
 		hostname: 'sl-boutique-cartservice',
 		port: 7072,
-		path: '/EmptyCart',
+		path: '/Cart/EmptyCart',
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
