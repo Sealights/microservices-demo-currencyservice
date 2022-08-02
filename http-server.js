@@ -75,6 +75,10 @@ const callDummyMethod = () => {
 
 	const req = http.request(options, res => {
 		console.log(`statusCode: ${res.statusCode}`);
+
+		res.on('data', d => {
+			process.stdout.write(d);
+		});
 	});
 
 	req.on('error', error => {
