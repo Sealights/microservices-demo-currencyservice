@@ -19,7 +19,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const https = require('https');
 
-const { convert, getSupportedCurrencies } = require('./core')
+const { convert, getSupportedCurrencies, getPrimaryCurrency } = require('./core')
 
 
 const startHttpServer = () => {
@@ -29,9 +29,19 @@ const startHttpServer = () => {
 	app.use(bodyParser.urlencoded({ extended: false }))
 	app.use(bodyParser.json())
 
+	app.get('/get-primary-currency', (req, res) => {
+		getPrimaryCurrency(req.body, (err, result) => {
+			if (err) {
+				return res.status(400).send(err)
+			}
+
+			return res.send(result)
+		})
+	})
+
 	app.get('/get-supported-currencies', (req, res) => {
 		getSupportedCurrencies(req.body, (err, result) => {
-			if(err) {
+			if (err) {
 				return res.status(400).send(err)
 			}
 
@@ -41,7 +51,7 @@ const startHttpServer = () => {
 
 	app.post('/convert', (req, res) => {
 		convert({ request: req.body }, (err, result) => {
-			if(err) {
+			if (err) {
 				return res.status(400).send(err)
 			}
 
