@@ -20,6 +20,7 @@ const pino = require('pino');
 const protoLoader = require('@grpc/proto-loader');
 const { startHttpServer } = require('./http-server')
 
+
 const MAIN_PROTO_PATH = path.join(__dirname, './proto/demo.proto');
 const HEALTH_PROTO_PATH = path.join(__dirname, './proto/grpc/health/v1/health.proto');
 
