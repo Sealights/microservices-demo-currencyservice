@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 const path = require('path');
 const grpc = require('@grpc/grpc-js');
 const pino = require('pino');
