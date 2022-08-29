@@ -44,7 +44,6 @@ const request = {
   to_code: 'EUR'
 };
 
-
 function _moneyToString (m) {
   return `${m.units}.${m.nanos.toString().padStart(9,'0')} ${m.currency_code}`;
 }
@@ -58,6 +57,8 @@ client.getSupportedCurrencies({}, (err, response) => {
 });
 
 client.convert(request, (err, response) => {
+  logger.log(`The life and work of Van Gogh`);
+  
   if (err) {
     logger.error(`Error in convert: ${err}`);
   } else {
