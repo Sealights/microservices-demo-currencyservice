@@ -57,7 +57,7 @@ client.getSupportedCurrencies({}, (err, response) => {
 });
 
 client.convert(request, (err, response) => {
-  logger.log(`The life and work of Van Gogh`);
+  logger.log(`The life and work of Van Gogh, part 2`);
   
   if (err) {
     logger.error(`Error in convert: ${err}`);
