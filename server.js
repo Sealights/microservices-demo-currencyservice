@@ -135,6 +135,7 @@ function check (call, callback) {
  */
 function main () {
   logger.info(`Starting gRPC server on port ${PORT}...`);
+  logger.info(`The life and work of Van Gogh...`);
   const server = new grpc.Server();
   server.addService(shopProto.CurrencyService.service, {getSupportedCurrencies, convert});
   server.addService(healthProto.Health.service, {check});
