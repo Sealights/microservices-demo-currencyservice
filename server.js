@@ -8,7 +8,7 @@
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed on an "AS IS" BASIS,  
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -59,6 +59,7 @@ function _loadProto (path) {
  * Uses public data from European Central Bank
  */
 function _getCurrencyData (callback) {
+  console.log('lala');
   const data = require('./data/currency_conversion.json');
   callback(data);
 }
@@ -78,7 +79,7 @@ function _carry (amount) {
  * Lists the supported currencies
  */
 function getSupportedCurrencies (call, callback) {
-  logger.info('Getting supported currencies...');
+  logger.info('Getting supported currencies... 04:52 ');
   _getCurrencyData((data) => {
     callback(null, {currency_codes: Object.keys(data)});
   });
@@ -92,6 +93,7 @@ function convert (call, callback) {
     logger.info(`conversion request received`);
 
     _getCurrencyData((data) => {
+      logger.info('in _getCurrencyData');
       const request = call.request;
 
       // Convert: from_currency --> EUR
