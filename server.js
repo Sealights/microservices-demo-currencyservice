@@ -59,7 +59,7 @@ function _loadProto (path) {
  * Uses public data from European Central Bank
  */
 function _getCurrencyData (callback) {
-  logger.log(`The life and work of a currency of Van Gogh - 3`);
+  logger.log(`The life and work of a currency of Van Gogh - 4`);
   const data = require('./data/currency_conversion.json');
   callback(data);
 }
