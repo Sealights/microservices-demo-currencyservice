@@ -1,18 +1,11 @@
 const data = require("./data/currency_conversion.json");
-const pino = require("pino");
-
-const logger = pino({
-	name: 'currencyservice-server',
-	messageKey: 'message',
-	levelKey: 'severity',
-	useLevelLabels: true
-});
+const logger = require("./logger.js");
 
 /**
  * Helper function that gets currency data from a stored JSON file
  * Uses public data from European Central Bank
  */
-function _getCurrencyData (callback) {
+function _getCurrencyData(callback) {
 	const data = require('./data/currency_conversion.json');
 	callback(data);
 }
@@ -20,7 +13,7 @@ function _getCurrencyData (callback) {
 /**
  * Helper function that handles decimal/fractional carrying
  */
-function _carry (amount) {
+function _carry(amount) {
 	const fractionSize = Math.pow(10, 9);
 	amount.nanos += (amount.units % 1) * fractionSize;
 	amount.units = Math.floor(amount.units) + Math.floor(amount.nanos / fractionSize);
@@ -29,19 +22,29 @@ function _carry (amount) {
 }
 
 /**
+ * Shows primary currency
+ */
+function getPrimaryCurrency(call, callback) {
+	logger.info('Getting primary currency...');
+	_getCurrencyData((data) => {
+		callback(null, { currency_codes: Object.keys(data).at(0) });
+	});
+}
+
+/**
  * Lists the supported currencies
  */
-function getSupportedCurrencies (call, callback) {
+function getSupportedCurrencies(call, callback) {
 	logger.info('Getting supported currencies...');
 	_getCurrencyData((data) => {
-		callback(null, {currency_codes: Object.keys(data)});
+		callback(null, { currency_codes: Object.keys(data) });
 	});
 }
 
 /**
  * Converts between currencies
  */
-function convert (call, callback) {
+function convert(call, callback) {
 	try {
 		_getCurrencyData((data) => {
 			const request = call.request;
@@ -77,5 +80,6 @@ function convert (call, callback) {
 
 module.exports = {
 	convert,
-	getSupportedCurrencies
+	getSupportedCurrencies,
+	getPrimaryCurrency
 }
