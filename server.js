@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+
 const path = require('path');
 const grpc = require('@grpc/grpc-js');
 const pino = require('pino');
 const protoLoader = require('@grpc/proto-loader');
 const { startHttpServer } = require('./http-server')
+
 
 const MAIN_PROTO_PATH = path.join(__dirname, './proto/demo.proto');
 const HEALTH_PROTO_PATH = path.join(__dirname, './proto/grpc/health/v1/health.proto');
@@ -57,6 +59,7 @@ function _loadProto(path) {
  * Uses public data from European Central Bank
  */
 function _getCurrencyData(callback) {
+  logger.info(`The life and work of a currency of Van Gogh - 6`);
   const data = require('./data/currency_conversion.json');
   callback(data);
 }
@@ -76,7 +79,8 @@ function _carry(amount) {
  * Lists the supported currencies
  */
 function getSupportedCurrencies(call, callback) {
-  logger.info('Getting supported currencies...');
+  logger.info('Getting supported currencies');
+
   _getCurrencyData((data) => {
     callback(null, { currency_codes: Object.keys(data) });
   });
@@ -87,6 +91,8 @@ function getSupportedCurrencies(call, callback) {
  */
 function convert(call, callback) {
   try {
+    logger.info(`conversion request received`);
+    logger.info('converting');
 
     _getCurrencyData((data) => {
       const request = call.request;
@@ -130,6 +136,8 @@ function check(call, callback) {
  * CurrencyConverter service at the sample server port
  */
 function main() {
+  logger.info(`Starting gRPC server on port ${PORT}...`);
+  logger.info(`The life and work of Van Gogh...`);
   const server = new grpc.Server();
   server.addService(shopProto.CurrencyService.service, { getSupportedCurrencies, convert });
   server.addService(healthProto.Health.service, { check });
