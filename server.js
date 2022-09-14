@@ -20,7 +20,7 @@ const grpc = require('@grpc/grpc-js');
 const pino = require('pino');
 const protoLoader = require('@grpc/proto-loader');
 const { startHttpServer } = require('./http-server')
-
+const multiply = require("./src/multiply");
 
 const MAIN_PROTO_PATH = path.join(__dirname, './proto/demo.proto');
 const HEALTH_PROTO_PATH = path.join(__dirname, './proto/grpc/health/v1/health.proto');
@@ -79,8 +79,8 @@ function _carry (amount) {
  * Lists the supported currencies
  */
 function getSupportedCurrencies (call, callback) {
-  logger.info('Getting supported currencies - 3');  
-  
+  logger.info('Getting supported currencies - 3');
+
   _getCurrencyData((data) => {
     callback(null, {currency_codes: Object.keys(data)});
   });
@@ -108,8 +108,8 @@ function convert (call, callback) {
 
       // Convert: EUR --> to_currency
       const result = _carry({
-        units: euros.units * data[request.to_code],
-        nanos: euros.nanos * data[request.to_code]
+        units: multiply(euros.units, data[request.to_code]),
+        nanos: multiply(euros.nanos, data[request.to_code])
       });
 
       result.units = Math.floor(result.units);
