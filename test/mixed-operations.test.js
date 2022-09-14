@@ -1,7 +1,7 @@
-const add = require('../add.test.js');
-const multiply = require('../multiply.spec.js');
-const divide = require('../divide.js');
-const subtract = require('../subtract.js');
+const add = require('../src/add.js');
+const multiply = require('../src/multiply.js');
+const divide = require('../src/divide.js');
+const subtract = require('../src/subtract.js');
 const expect = require('chai').expect;
 
 describe('try all operations at once', function () {

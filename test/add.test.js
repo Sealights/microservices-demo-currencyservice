@@ -1,4 +1,4 @@
-const add = require('../add.js');
+const add = require('../src/add.js');
 const expect = require('chai').expect;
 
 describe('calculate result', function () {

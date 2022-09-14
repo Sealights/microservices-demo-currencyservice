@@ -1,4 +1,4 @@
-const multiply = require('../multiply.js');
+const multiply = require('../src/multiply.js');
 const expect = require('chai').expect;
 
 describe('calculate result', function () {

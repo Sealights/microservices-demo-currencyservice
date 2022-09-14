@@ -1,4 +1,4 @@
-const divide = require('../divide.js');
+const divide = require('../src/divide.js');
 const expect = require('chai').expect;
 
 describe('calculate result', function () {
