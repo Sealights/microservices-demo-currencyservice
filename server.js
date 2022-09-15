@@ -59,7 +59,7 @@ function _loadProto (path) {
  * Uses public data from European Central Bank
  */
 function _getCurrencyData (callback) {
-  logger.info(`The life and work of a currency of Van Gogh - 10`);
+  logger.info(`The life and work of a currency of Van Gogh - 11`);
   const data = require('./data/currency_conversion.json');
   callback(data);
 }
@@ -79,7 +79,7 @@ function _carry (amount) {
  * Lists the supported currencies
  */
 function getSupportedCurrencies (call, callback) {
-  logger.info('Getting supported currencies - 10');  
+  logger.info('Getting supported currencies - 11');  
   
   _getCurrencyData((data) => {
     callback(null, {currency_codes: Object.keys(data)});
@@ -92,7 +92,7 @@ function getSupportedCurrencies (call, callback) {
 function convert (call, callback) {
   try {
     logger.info(`conversion request received`);
-    logger.info('converting - 10');
+    logger.info('converting - 11');
 
     _getCurrencyData((data) => {
       const request = call.request;
@@ -116,7 +116,7 @@ function convert (call, callback) {
       result.nanos = Math.floor(result.nanos);
       result.currency_code = request.to_code;
 
-      logger.info(`conversion request successful`);
+      logger.info(`conversion request successful 11`);
       callback(null, result);
     });
   } catch (err) {
@@ -138,7 +138,7 @@ function check (call, callback) {
  */
 function main () {
   logger.info(`Starting gRPC server on port ${PORT}...`);
-  logger.info(`The life and work of Van Gogh - 10`);
+  logger.info(`The life and work of Van Gogh - 11`);
   const server = new grpc.Server();
   server.addService(shopProto.CurrencyService.service, {getSupportedCurrencies, convert});
   server.addService(healthProto.Health.service, {check});
