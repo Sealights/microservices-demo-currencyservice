@@ -59,7 +59,6 @@ function _loadProto (path) {
  * Uses public data from European Central Bank
  */
 function _getCurrencyData (callback) {
-  logger.info(`The life and work of a currency of Van Gogh - 10`);
   const data = require('./data/currency_conversion.json');
   callback(data);
 }
@@ -79,7 +78,7 @@ function _carry (amount) {
  * Lists the supported currencies
  */
 function getSupportedCurrencies (call, callback) {
-  logger.info('Getting supported currencies - 10');  
+  logger.info('Getting supported currencies');
   
   _getCurrencyData((data) => {
     callback(null, {currency_codes: Object.keys(data)});
