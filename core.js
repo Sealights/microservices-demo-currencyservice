@@ -53,7 +53,7 @@ function convert (call, callback) {
 				nanos: from.nanos / data[from.currency_code]
 			});
 
-			euros.nanos = Math.round(euros.nanos);
+			euros.nanos = Math.floor(euros.nanos); //FIX BUG-1234
 
 			// Convert: EUR --> to_currency
 			const result = _carry({
