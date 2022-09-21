@@ -92,7 +92,6 @@ function getSupportedCurrencies (call, callback) {
 function convert (call, callback) {
   try {
     logger.info(`conversion request received`);
-    logger.info('converting - 10');
 
     _getCurrencyData((data) => {
       const request = call.request;
@@ -138,7 +137,6 @@ function check (call, callback) {
  */
 function main () {
   logger.info(`Starting gRPC server on port ${PORT}...`);
-  logger.info(`The life and work of Van Gogh - 10`);
   const server = new grpc.Server();
   server.addService(shopProto.CurrencyService.service, {getSupportedCurrencies, convert});
   server.addService(healthProto.Health.service, {check});
